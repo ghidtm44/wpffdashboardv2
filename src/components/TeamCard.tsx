@@ -124,4 +124,4 @@ function getStreakDisplay(streak: number) {
   if (streak <= -3) return <div className="flex items-center gap-1"><Snowflake className="text-blue-500" /> <span className="text-sm">Frozen</span></div>;
   if (streak === -2) return <div className="flex items-center gap-1"><Snowflake className="text-blue-300" /> <span className="text-sm">Cooling Off</span></div>;
   return null;
-}</content>
+}
