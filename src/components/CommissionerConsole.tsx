@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useStore } from '../store';
 import { Team } from '../types';
+import toast from 'react-hot-toast';
 
 export const CommissionerConsole: React.FC = () => {
-  const { teams, addTeam, addResult, addWriteup } = useStore();
+  const { teams, results, addTeam, addResult, addWriteup } = useStore();
   const [newTeam, setNewTeam] = useState({ name: '', manager: '' });
   const [selectedWeek, setSelectedWeek] = useState(1);
   const [matchup, setMatchup] = useState({
@@ -11,56 +12,82 @@ export const CommissionerConsole: React.FC = () => {
     team2: '',
     score1: '',
     score2: '',
-    topPlayer: '',
-    topPoints: '',
   });
   const [writeup, setWriteup] = useState('');
 
-  const handleAddTeam = (e: React.FormEvent) => {
+  const handleAddTeam = async (e: React.FormEvent) => {
     e.preventDefault();
-    addTeam(newTeam.name, newTeam.manager);
-    setNewTeam({ name: '', manager: '' });
+    if (!newTeam.name || !newTeam.manager) {
+      toast.error('Please fill in all team details');
+      return;
+    }
+    
+    try {
+      await addTeam(newTeam.name, newTeam.manager);
+      toast.success('Team added successfully!');
+      setNewTeam({ name: '', manager: '' });
+    } catch (error) {
+      toast.error('Failed to add team');
+    }
   };
 
-  const handleAddResult = (e: React.FormEvent) => {
+  const handleAddResult = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!matchup.team1 || !matchup.team2) return;
+    if (!matchup.team1 || !matchup.team2 || !matchup.score1 || !matchup.score2) {
+      toast.error('Please fill in all matchup details');
+      return;
+    }
 
-    addResult({
-      team_id: matchup.team1,
-      opponent_id: matchup.team2,
-      week: selectedWeek,
-      points: Number(matchup.score1),
-      opponent_points: Number(matchup.score2),
-      top_player: matchup.topPlayer === matchup.team1,
-      top_points: matchup.topPoints === matchup.team1,
-    });
+    try {
+      await addResult({
+        team_id: matchup.team1,
+        opponent_id: matchup.team2,
+        week: selectedWeek,
+        points: Number(matchup.score1),
+        opponent_points: Number(matchup.score2),
+        top_player: false,
+        top_points: false,
+      });
 
-    addResult({
-      team_id: matchup.team2,
-      opponent_id: matchup.team1,
-      week: selectedWeek,
-      points: Number(matchup.score2),
-      opponent_points: Number(matchup.score1),
-      top_player: matchup.topPlayer === matchup.team2,
-      top_points: matchup.topPoints === matchup.team2,
-    });
+      await addResult({
+        team_id: matchup.team2,
+        opponent_id: matchup.team1,
+        week: selectedWeek,
+        points: Number(matchup.score2),
+        opponent_points: Number(matchup.score1),
+        top_player: false,
+        top_points: false,
+      });
 
-    setMatchup({
-      team1: '',
-      team2: '',
-      score1: '',
-      score2: '',
-      topPlayer: '',
-      topPoints: '',
-    });
+      toast.success('Results added successfully!');
+      setMatchup({
+        team1: '',
+        team2: '',
+        score1: '',
+        score2: '',
+      });
+    } catch (error) {
+      toast.error('Failed to add results');
+    }
   };
 
-  const handleWriteup = (e: React.FormEvent) => {
+  const handleWriteup = async (e: React.FormEvent) => {
     e.preventDefault();
-    addWriteup(selectedWeek, writeup);
-    setWriteup('');
+    if (!writeup) {
+      toast.error('Please enter a write-up');
+      return;
+    }
+
+    try {
+      await addWriteup(selectedWeek, writeup);
+      toast.success('Write-up added successfully!');
+      setWriteup('');
+    } catch (error) {
+      toast.error('Failed to add write-up');
+    }
   };
+
+  const weeks = Array.from({ length: 17 }, (_, i) => i + 1);
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
@@ -83,6 +110,89 @@ export const CommissionerConsole: React.FC = () => {
           />
           <button type="submit" className="retro-button">Add Team</button>
         </form>
+      </section>
+
+      <section className="retro-card">
+        <h2 className="text-xl mb-4">Team Results Overview</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr>
+                <th className="text-left p-2">Team</th>
+                {weeks.map(week => (
+                  <th key={week} className="p-2 text-center">W{week}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {teams.map(team => (
+                <tr key={team.id} className="border-t border-gray-700">
+                  <td className="p-2">{team.name}</td>
+                  {weeks.map(week => {
+                    const result = results.find(
+                      r => r.team_id === team.id && r.week === week
+                    );
+                    return (
+                      <td key={week} className="p-2 text-center">
+                        {result && (
+                          <div className="space-y-1">
+                            <div className={`text-xs ${
+                              result.points > result.opponent_points
+                                ? 'text-green-400'
+                                : 'text-red-400'
+                            }`}>
+                              {result.points > result.opponent_points ? 'W' : 'L'}
+                            </div>
+                            <div className="flex justify-center gap-1">
+                              <label className="inline-flex items-center">
+                                <input
+                                  type="checkbox"
+                                  className="retro-checkbox"
+                                  checked={result.top_player}
+                                  onChange={async () => {
+                                    try {
+                                      await addResult({
+                                        ...result,
+                                        top_player: !result.top_player,
+                                      });
+                                      toast.success('Updated top player status');
+                                    } catch (error) {
+                                      toast.error('Failed to update');
+                                    }
+                                  }}
+                                />
+                                <span className="text-xs ml-1">TP</span>
+                              </label>
+                              <label className="inline-flex items-center">
+                                <input
+                                  type="checkbox"
+                                  className="retro-checkbox"
+                                  checked={result.top_points}
+                                  onChange={async () => {
+                                    try {
+                                      await addResult({
+                                        ...result,
+                                        top_points: !result.top_points,
+                                      });
+                                      toast.success('Updated top points status');
+                                    } catch (error) {
+                                      toast.error('Failed to update');
+                                    }
+                                  }}
+                                />
+                                <span className="text-xs ml-1">TT</span>
+                              </label>
+                            </div>
+                          </div>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section className="retro-card">
@@ -111,6 +221,7 @@ export const CommissionerConsole: React.FC = () => {
             </select>
             <input
               type="number"
+              step="0.01"
               placeholder="Team 1 Score"
               className="retro-input"
               value={matchup.score1}
@@ -118,31 +229,12 @@ export const CommissionerConsole: React.FC = () => {
             />
             <input
               type="number"
+              step="0.01"
               placeholder="Team 2 Score"
               className="retro-input"
               value={matchup.score2}
               onChange={e => setMatchup(prev => ({ ...prev, score2: e.target.value }))}
             />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <select
-              className="retro-input"
-              value={matchup.topPlayer}
-              onChange={e => setMatchup(prev => ({ ...prev, topPlayer: e.target.value }))}
-            >
-              <option value="">Top Player</option>
-              <option value={matchup.team1}>Team 1</option>
-              <option value={matchup.team2}>Team 2</option>
-            </select>
-            <select
-              className="retro-input"
-              value={matchup.topPoints}
-              onChange={e => setMatchup(prev => ({ ...prev, topPoints: e.target.value }))}
-            >
-              <option value="">Top Points</option>
-              <option value={matchup.team1}>Team 1</option>
-              <option value={matchup.team2}>Team 2</option>
-            </select>
           </div>
           <button type="submit" className="retro-button">Submit Results</button>
         </form>
