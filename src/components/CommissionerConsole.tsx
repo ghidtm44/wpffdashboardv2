@@ -97,6 +97,32 @@ export const CommissionerConsole: React.FC = () => {
     return results.find(r => r.team_id === teamId && r.week === week);
   };
 
+  const handleTopPlayerToggle = async (teamId: string, week: number) => {
+    const result = getTeamResults(teamId, week);
+    if (!result) return;
+
+    try {
+      // Update the current result
+      await addResult({
+        ...result,
+        top_player: !result.top_player,
+      });
+
+      // Find and update the opponent's result
+      const opponentResult = results.find(
+        r => r.team_id === result.opponent_id && r.week === week
+      );
+      if (opponentResult) {
+        await addResult({
+          ...opponentResult,
+          top_player: false,
+        });
+      }
+    } catch (error) {
+      console.error('Error updating top player:', error);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto mt-8 p-4 space-y-8">
       <section className="retro-card">
@@ -150,7 +176,20 @@ export const CommissionerConsole: React.FC = () => {
                             : ''
                         }`}
                       >
-                        {result ? (won ? 'W' : 'L') : '-'}
+                        <div className="flex flex-col items-center gap-1">
+                          <span>{result ? (won ? 'W' : 'L') : '-'}</span>
+                          {result && (
+                            <label className="flex items-center gap-1">
+                              <input
+                                type="checkbox"
+                                className="retro-checkbox"
+                                checked={result.top_player}
+                                onChange={() => handleTopPlayerToggle(team.id, parseInt(week))}
+                              />
+                              <span className="text-xs">Top Player</span>
+                            </label>
+                          )}
+                        </div>
                       </td>
                     );
                   })}
