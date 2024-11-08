@@ -9,7 +9,7 @@
   body {
     @apply bg-green-800 text-white;
     font-family: 'Press Start 2P', system-ui;
-    background-image: url('/src/field.png');
+    background-image: url('./field.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
