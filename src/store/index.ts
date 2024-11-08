@@ -60,7 +60,7 @@ export const useStore = create<AppState>((set, get) => ({
       const { data, error } = await supabase
         .from('weekly_writeups')
         .select('*')
-        .order('week', { ascending: false })
+        .order('created_at', { ascending: false })
         .limit(1)
         .single();
         
@@ -122,6 +122,7 @@ export const useStore = create<AppState>((set, get) => ({
   
   addWriteup: async (week, content) => {
     try {
+      // Always insert new writeups, they'll be ordered by created_at
       const { error } = await supabase
         .from('weekly_writeups')
         .insert([{ week, content }]);
