@@ -8,18 +8,17 @@
   body {
     @apply bg-green-800 text-white;
     font-family: 'Press Start 2P', system-ui;
-    background-image: 
-      linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-      url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M0 50h100M50 0v100'/%3E%3Cpath d='M0 0l100 100M100 0L0 100' stroke-opacity='0.3'/%3E%3C/g%3E%3Crect x='45' y='45' width='10' height='10' fill='%23ffffff' fill-opacity='0.2'/%3E%3C/svg%3E");
-    background-size: 100px 100px;
+    background-image: url('../src/field.png');
+    background-size: cover;
     background-position: center;
+    background-attachment: fixed;
     image-rendering: pixelated;
   }
 }
 
 @layer components {
   .retro-card {
-    @apply relative border-4 border-gray-700 bg-gray-800/90 p-6 rounded-lg shadow-lg;
+    @apply relative border-4 border-gray-700 bg-gray-800 p-6 rounded-lg shadow-lg;
     image-rendering: pixelated;
   }
   
@@ -98,7 +97,7 @@
   }
 
   .stat-item {
-    @apply flex items-center gap-2 bg-gray-700/50 p-2 rounded;
+    @apply flex items-center gap-2 bg-gray-700 p-2 rounded;
   }
 
   .stat-label {
