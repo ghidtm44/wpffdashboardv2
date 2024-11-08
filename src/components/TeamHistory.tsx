@@ -13,7 +13,7 @@ export const TeamHistory: React.FC<TeamHistoryProps> = ({ team, results, onClose
   const { getTopScoringTeam } = useStore();
   const teamResults = results
     .filter(r => r.team_id === team.id)
-    .sort((a, b) => a.week - b.week);
+    .sort((a, b) => b.week - a.week); // Changed sort order here
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
