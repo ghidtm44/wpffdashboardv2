@@ -5,6 +5,7 @@ import { TeamCard } from './components/TeamCard';
 import { TeamHistory } from './components/TeamHistory';
 import { CommissionerConsole } from './components/CommissionerConsole';
 import { Team } from './types';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const { 
@@ -38,8 +39,10 @@ function App() {
 
   return (
     <div className="min-h-screen p-6">
-      <h1 className="retro-title text-4xl text-center mb-12">
-        Welcome to the Wolfpack Fantasy League
+      <Toaster position="top-right" />
+      
+      <h1 className="retro-title">
+        Welcome to the<br />Wolfpack Fantasy League
       </h1>
 
       {writeup && (
