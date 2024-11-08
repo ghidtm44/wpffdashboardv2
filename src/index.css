@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+}
+
+@layer base {
+  body {
+    @apply bg-gray-900 text-white;
+    font-family: 'Press Start 2P', system-ui;
+  }
+}
+
+@layer components {
+  .retro-card {
+    @apply relative border-4 border-gray-700 bg-gray-800 p-6 rounded-lg shadow-lg;
+    image-rendering: pixelated;
+  }
+  
+  .retro-button {
+    @apply px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded 
+           border-b-4 border-blue-800 active:border-b-0 active:mt-1 transition-all;
+    image-rendering: pixelated;
+  }
+  
+  .retro-input {
+    @apply bg-gray-700 border-2 border-gray-600 rounded px-3 py-2 text-white 
+           focus:outline-none focus:border-blue-500;
+    font-family: 'Press Start 2P', system-ui;
+  }
+  
+  .heating-up {
+    @apply animate-pulse;
+    box-shadow: 0 0 15px theme('colors.orange.500');
+  }
+  
+  .on-fire {
+    @apply animate-pulse;
+    box-shadow: 0 0 25px theme('colors.orange.500');
+  }
+  
+  .cooling-off {
+    @apply animate-pulse;
+    box-shadow: 0 0 15px theme('colors.blue.300');
+  }
+  
+  .frozen {
+    @apply animate-pulse;
+    box-shadow: 0 0 25px theme('colors.blue.500');
+  }
+}
