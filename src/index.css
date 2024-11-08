@@ -2,19 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Press Start 2P';
-  src: url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-}
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 @layer base {
   body {
-    @apply bg-gray-900 text-white;
+    @apply bg-green-800 text-white;
     font-family: 'Press Start 2P', system-ui;
     background-image: 
       linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-      url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23433' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 100px 100px;
+      url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M0 50h100M50 0v100'/%3E%3Cpath d='M0 0l100 100M100 0L0 100' stroke-opacity='0.3'/%3E%3C/g%3E%3Crect x='45' y='45' width='10' height='10' fill='%23ffffff' fill-opacity='0.2'/%3E%3C/svg%3E"),
+      repeating-linear-gradient(
+        0deg,
+        #2f4f2f 0px,
+        #2f4f2f 5px,
+        #1f3f1f 5px,
+        #1f3f1f 10px
+      );
+    background-size: 100px 100px, 100px 100px, 100% 100%;
+    background-position: center;
+    image-rendering: pixelated;
   }
 }
 
@@ -27,13 +33,14 @@
   .retro-button {
     @apply px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded 
            border-b-4 border-blue-800 active:border-b-0 active:mt-1 transition-all;
+    font-family: 'Press Start 2P', monospace;
     image-rendering: pixelated;
   }
   
   .retro-input {
     @apply bg-gray-700 border-2 border-gray-600 rounded px-3 py-2 text-white 
            focus:outline-none focus:border-blue-500;
-    font-family: 'Press Start 2P', system-ui;
+    font-family: 'Press Start 2P', monospace;
   }
 
   .retro-checkbox {
@@ -62,52 +69,69 @@
   }
 
   .retro-title {
-    @apply text-6xl font-bold text-center mb-12 tracking-wider;
+    @apply text-6xl font-bold text-center mb-12;
     font-family: 'Press Start 2P', monospace;
     color: #fff;
     text-shadow: 
-      0 0 10px rgba(0, 255, 255, 0.5),
-      0 0 20px rgba(0, 255, 255, 0.3),
-      0 0 30px rgba(0, 255, 255, 0.2),
-      4px 4px 0 theme('colors.blue.500'),
-      8px 8px 0 theme('colors.blue.700'),
+      0 0 10px rgba(255, 215, 0, 0.5),
+      0 0 20px rgba(255, 215, 0, 0.3),
+      0 0 30px rgba(255, 215, 0, 0.2),
+      4px 4px 0 #b22222,
+      8px 8px 0 #8b0000,
       -2px -2px 0 #000,
       2px -2px 0 #000,
       -2px 2px 0 #000,
       2px 2px 0 #000;
     animation: 
       glow 2s ease-in-out infinite alternate,
-      scanlines 2s linear infinite;
+      glitch 0.4s ease-in-out infinite alternate;
     letter-spacing: 2px;
+    line-height: 1.5;
   }
 
   @keyframes glow {
     from {
-      filter: brightness(0.9) drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
+      filter: brightness(0.9) drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
     }
     to {
-      filter: brightness(1.1) drop-shadow(0 0 20px rgba(0, 255, 255, 0.8));
+      filter: brightness(1.1) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
     }
   }
 
-  @keyframes scanlines {
+  @keyframes glitch {
     0% {
-      background: linear-gradient(
-        to bottom,
-        transparent 50%,
-        rgba(0, 0, 0, 0.1) 50%
-      );
-      background-size: 100% 4px;
-      background-position: 0 0;
+      transform: translate(0);
+    }
+    20% {
+      transform: translate(-2px, 2px);
+    }
+    40% {
+      transform: translate(-2px, -2px);
+    }
+    60% {
+      transform: translate(2px, 2px);
+    }
+    80% {
+      transform: translate(2px, -2px);
     }
     100% {
-      background: linear-gradient(
-        to bottom,
-        transparent 50%,
-        rgba(0, 0, 0, 0.1) 50%
-      );
-      background-size: 100% 4px;
-      background-position: 0 4px;
+      transform: translate(0);
     }
+  }
+
+  .stats-grid {
+    @apply grid grid-cols-2 gap-2 mt-4 text-sm;
+  }
+
+  .stat-item {
+    @apply flex items-center gap-2 bg-gray-700/50 p-2 rounded;
+  }
+
+  .stat-label {
+    @apply text-gray-300 text-xs;
+  }
+
+  .stat-value {
+    @apply text-white font-bold;
   }
 }
