@@ -4,7 +4,7 @@ import { Team } from '../types';
 import toast from 'react-hot-toast';
 
 export const CommissionerConsole: React.FC = () => {
-  const { teams, results, addTeam, addResult, addWriteup } = useStore();
+  const { teams, results, addTeam, addResult, addWriteup, addLeagueWinner } = useStore();
   
   const [newTeam, setNewTeam] = useState({ name: '', manager: '' });
   const [matchup, setMatchup] = useState({
@@ -15,6 +15,11 @@ export const CommissionerConsole: React.FC = () => {
     score2: '',
   });
   const [writeup, setWriteup] = useState({ week: '1', content: '' });
+  const [leagueWinner, setLeagueWinner] = useState({
+    year: new Date().getFullYear(),
+    champion_name: '',
+    champion_manager: ''
+  });
 
   // Generate weeks 1-17
   const weeks = Array.from({ length: 17 }, (_, i) => (i + 1).toString());
@@ -56,7 +61,6 @@ export const CommissionerConsole: React.FC = () => {
         top_points: false,
       });
 
-      // Add reverse matchup
       await addResult({
         team_id: matchup.team2,
         opponent_id: matchup.team1,
@@ -93,6 +97,24 @@ export const CommissionerConsole: React.FC = () => {
     }
   };
 
+  const handleLeagueWinner = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!leagueWinner.champion_name || !leagueWinner.champion_manager) {
+      toast.error('Please fill in all winner details');
+      return;
+    }
+    try {
+      await addLeagueWinner(leagueWinner);
+      setLeagueWinner({
+        year: leagueWinner.year,
+        champion_name: '',
+        champion_manager: ''
+      });
+    } catch (error) {
+      console.error('Error adding league winner:', error);
+    }
+  };
+
   const getTeamResults = (teamId: string, week: number) => {
     return results.find(r => r.team_id === teamId && r.week === week);
   };
@@ -102,13 +124,11 @@ export const CommissionerConsole: React.FC = () => {
     if (!result) return;
 
     try {
-      // Update the current result
       await addResult({
         ...result,
         top_player: !result.top_player,
       });
 
-      // Find and update the opponent's result
       const opponentResult = results.find(
         r => r.team_id === result.opponent_id && r.week === week
       );
@@ -125,27 +145,6 @@ export const CommissionerConsole: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-8 p-4 space-y-8">
-      <section className="retro-card">
-        <h2 className="text-xl font-bold mb-4">Add Team</h2>
-        <form onSubmit={handleAddTeam} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Team Name"
-            className="retro-input w-full"
-            value={newTeam.name}
-            onChange={e => setNewTeam(prev => ({ ...prev, name: e.target.value }))}
-          />
-          <input
-            type="text"
-            placeholder="Manager Name"
-            className="retro-input w-full"
-            value={newTeam.manager}
-            onChange={e => setNewTeam(prev => ({ ...prev, manager: e.target.value }))}
-          />
-          <button type="submit" className="retro-button w-full">Add Team</button>
-        </form>
-      </section>
-
       <section className="retro-card">
         <h2 className="text-xl font-bold mb-4">Team Results Overview</h2>
         <div className="overflow-x-auto">
@@ -276,6 +275,57 @@ export const CommissionerConsole: React.FC = () => {
           <button type="submit" className="retro-button w-full">Submit Write-up</button>
         </form>
       </section>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <section className="retro-card">
+          <h2 className="text-xl font-bold mb-4">Add Team</h2>
+          <form onSubmit={handleAddTeam} className="space-y-4">
+            <input
+              type="text"
+              placeholder="Team Name"
+              className="retro-input w-full"
+              value={newTeam.name}
+              onChange={e => setNewTeam(prev => ({ ...prev, name: e.target.value }))}
+            />
+            <input
+              type="text"
+              placeholder="Manager Name"
+              className="retro-input w-full"
+              value={newTeam.manager}
+              onChange={e => setNewTeam(prev => ({ ...prev, manager: e.target.value }))}
+            />
+            <button type="submit" className="retro-button w-full">Add Team</button>
+          </form>
+        </section>
+
+        <section className="retro-card">
+          <h2 className="text-xl font-bold mb-4">League Winners</h2>
+          <form onSubmit={handleLeagueWinner} className="space-y-4">
+            <input
+              type="number"
+              placeholder="Year"
+              className="retro-input w-full"
+              value={leagueWinner.year}
+              onChange={e => setLeagueWinner(prev => ({ ...prev, year: parseInt(e.target.value) }))}
+            />
+            <input
+              type="text"
+              placeholder="Champion Team Name"
+              className="retro-input w-full"
+              value={leagueWinner.champion_name}
+              onChange={e => setLeagueWinner(prev => ({ ...prev, champion_name: e.target.value }))}
+            />
+            <input
+              type="text"
+              placeholder="Champion Manager"
+              className="retro-input w-full"
+              value={leagueWinner.champion_manager}
+              onChange={e => setLeagueWinner(prev => ({ ...prev, champion_manager: e.target.value }))}
+            />
+            <button type="submit" className="retro-button w-full">Update League Winner</button>
+          </form>
+        </section>
+      </div>
     </div>
   );
 };
