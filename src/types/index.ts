@@ -22,3 +22,10 @@ export interface WeeklyWriteup {
   week: number;
   content: string;
 }
+
+export interface LeagueHistory {
+  id: string;
+  year: number;
+  champion_name: string;
+  champion_manager: string;
+}
