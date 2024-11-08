@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Team, WeeklyResult, WeeklyWriteup } from '../types';
+import { Team, WeeklyResult, WeeklyWriteup, LeagueHistory } from '../types';
 import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
 
@@ -7,11 +7,13 @@ interface AppState {
   teams: Team[];
   results: WeeklyResult[];
   writeup: WeeklyWriteup | null;
+  history: LeagueHistory[];
   isCommissioner: boolean;
   setCommissioner: (value: boolean) => void;
   fetchTeams: () => Promise<void>;
   fetchResults: () => Promise<void>;
   fetchWriteup: () => Promise<void>;
+  fetchHistory: () => Promise<void>;
   addTeam: (name: string, manager: string) => Promise<void>;
   addResult: (result: Omit<WeeklyResult, 'id'>) => Promise<void>;
   addWriteup: (week: number, content: string) => Promise<void>;
@@ -22,6 +24,7 @@ export const useStore = create<AppState>((set, get) => ({
   teams: [],
   results: [],
   writeup: null,
+  history: [],
   isCommissioner: false,
   
   setCommissioner: (value) => set({ isCommissioner: value }),
@@ -50,7 +53,6 @@ export const useStore = create<AppState>((set, get) => ({
         
       if (error) throw error;
       if (data) {
-        // Update top_points flag for each week's highest scorer
         const resultsByWeek = data.reduce((acc, result) => {
           acc[result.week] = acc[result.week] || [];
           acc[result.week].push(result);
@@ -88,6 +90,21 @@ export const useStore = create<AppState>((set, get) => ({
       console.error('Error fetching writeup:', error);
     }
   },
+
+  fetchHistory: async () => {
+    try {
+      const { data, error } = await supabase
+        .from('league_history')
+        .select('*')
+        .order('year', { ascending: false });
+        
+      if (error) throw error;
+      if (data) set({ history: data });
+    } catch (error) {
+      toast.error('Failed to fetch league history');
+      console.error('Error fetching history:', error);
+    }
+  },
   
   addTeam: async (name, manager) => {
     try {
@@ -108,7 +125,6 @@ export const useStore = create<AppState>((set, get) => ({
   
   addResult: async (result) => {
     try {
-      // First, delete any existing result for this combination
       const { error: deleteError } = await supabase
         .from('weekly_results')
         .delete()
@@ -120,7 +136,6 @@ export const useStore = create<AppState>((set, get) => ({
 
       if (deleteError) throw deleteError;
 
-      // Then insert the new result
       const { error: insertError } = await supabase
         .from('weekly_results')
         .insert([result]);
