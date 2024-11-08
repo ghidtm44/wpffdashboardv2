@@ -8,7 +8,36 @@ import { Team } from './types';
 import { Toaster } from 'react-hot-toast';
 
 function App() {
-  // ... existing state and handlers remain the same ...
+  const { 
+    teams,
+    results,
+    writeup,
+    isCommissioner,
+    setCommissioner,
+    fetchTeams,
+    fetchResults,
+    fetchWriteup
+  } = useStore();
+
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    fetchTeams();
+    fetchResults();
+    fetchWriteup();
+  }, [fetchTeams, fetchResults, fetchWriteup]);
+
+  const handlePasswordSubmit = () => {
+    if (password === 'wolfpack69!') {
+      setCommissioner(true);
+      setShowPasswordModal(false);
+      setPassword('');
+    } else {
+      alert('Incorrect password');
+    }
+  };
 
   return (
     <div className="min-h-screen p-2 sm:p-6">
