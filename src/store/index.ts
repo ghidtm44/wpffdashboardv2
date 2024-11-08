@@ -15,6 +15,7 @@ interface AppState {
   addTeam: (name: string, manager: string) => Promise<void>;
   addResult: (result: Omit<WeeklyResult, 'id'>) => Promise<void>;
   addWriteup: (week: number, content: string) => Promise<void>;
+  getTopScoringTeam: (week: number) => string | null;
 }
 
 export const useStore = create<AppState>((set, get) => ({
@@ -122,7 +123,6 @@ export const useStore = create<AppState>((set, get) => ({
   
   addWriteup: async (week, content) => {
     try {
-      // Always insert new writeups, they'll be ordered by created_at
       const { error } = await supabase
         .from('weekly_writeups')
         .insert([{ week, content }]);
@@ -136,5 +136,18 @@ export const useStore = create<AppState>((set, get) => ({
       console.error('Error adding writeup:', error);
       throw error;
     }
+  },
+
+  getTopScoringTeam: (week: number) => {
+    const results = get().results;
+    if (!results.length) return null;
+
+    const weekResults = results.filter(r => r.week === week);
+    if (!weekResults.length) return null;
+
+    const topScore = Math.max(...weekResults.map(r => r.points));
+    const topTeam = weekResults.find(r => r.points === topScore);
+    
+    return topTeam ? topTeam.team_id : null;
   },
 }));
