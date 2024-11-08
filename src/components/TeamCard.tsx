@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trophy, Flame, Snowflake, Crown } from 'lucide-react';
+import { Trophy, Flame, Snowflake, Crown, Star, Shield } from 'lucide-react';
 import { Team, WeeklyResult } from '../types';
 import { useStore } from '../store';
 
@@ -15,8 +15,11 @@ export const TeamCard: React.FC<TeamCardProps> = ({ team, results, onClick }) =>
   const streak = calculateStreak(teamResults);
   const cardClass = getCardClass(streak);
   
+  // Calculate statistics
+  const stats = calculateStats(teamResults);
+  
   // Get the most recent week
-  const latestWeek = Math.max(...results.map(r => r.week));
+  const latestWeek = Math.max(...results.map(r => r.week), 0);
   const isTopScorer = getTopScoringTeam(latestWeek) === team.id;
   
   return (
@@ -38,9 +41,49 @@ export const TeamCard: React.FC<TeamCardProps> = ({ team, results, onClick }) =>
         </div>
         {getStreakDisplay(streak)}
       </div>
+
+      <div className="stats-grid">
+        <div className="stat-item">
+          <Shield size={14} className="text-green-400" />
+          <div>
+            <span className="stat-label">PF: </span>
+            <span className="stat-value">{stats.pointsFor.toFixed(1)}</span>
+          </div>
+        </div>
+        <div className="stat-item">
+          <Shield size={14} className="text-red-400" />
+          <div>
+            <span className="stat-label">PA: </span>
+            <span className="stat-value">{stats.pointsAgainst.toFixed(1)}</span>
+          </div>
+        </div>
+        <div className="stat-item">
+          <Crown size={14} className="text-yellow-400" />
+          <div>
+            <span className="stat-label">Top Score: </span>
+            <span className="stat-value">{stats.topScoreCount}</span>
+          </div>
+        </div>
+        <div className="stat-item">
+          <Star size={14} className="text-yellow-400" />
+          <div>
+            <span className="stat-label">Top Player: </span>
+            <span className="stat-value">{stats.topPlayerCount}</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
+
+function calculateStats(results: WeeklyResult[]) {
+  return {
+    pointsFor: results.reduce((sum, result) => sum + result.points, 0),
+    pointsAgainst: results.reduce((sum, result) => sum + result.opponent_points, 0),
+    topScoreCount: results.filter(result => result.top_points).length,
+    topPlayerCount: results.filter(result => result.top_player).length,
+  };
+}
 
 function calculateStreak(results: WeeklyResult[]): number {
   let streak = 0;
