@@ -17,6 +17,7 @@ interface AppState {
   addTeam: (name: string, manager: string) => Promise<void>;
   addResult: (result: Omit<WeeklyResult, 'id'>) => Promise<void>;
   addWriteup: (week: number, content: string) => Promise<void>;
+  addLeagueWinner: (winner: Omit<LeagueHistory, 'id' | 'created_at'>) => Promise<void>;
   getTopScoringTeam: (week: number) => string | null;
 }
 
@@ -52,22 +53,7 @@ export const useStore = create<AppState>((set, get) => ({
         .order('week', { ascending: true });
         
       if (error) throw error;
-      if (data) {
-        const resultsByWeek = data.reduce((acc, result) => {
-          acc[result.week] = acc[result.week] || [];
-          acc[result.week].push(result);
-          return acc;
-        }, {} as Record<number, WeeklyResult[]>);
-
-        Object.values(resultsByWeek).forEach(weekResults => {
-          const maxPoints = Math.max(...weekResults.map(r => r.points));
-          weekResults.forEach(result => {
-            result.top_points = result.points === maxPoints;
-          });
-        });
-
-        set({ results: data });
-      }
+      if (data) set({ results: data });
     } catch (error) {
       toast.error('Failed to fetch results');
       console.error('Error fetching results:', error);
@@ -165,6 +151,30 @@ export const useStore = create<AppState>((set, get) => ({
     } catch (error) {
       toast.error('Failed to add writeup');
       console.error('Error adding writeup:', error);
+      throw error;
+    }
+  },
+
+  addLeagueWinner: async (winner) => {
+    try {
+      const { error: deleteError } = await supabase
+        .from('league_history')
+        .delete()
+        .match({ year: winner.year });
+
+      if (deleteError) throw deleteError;
+
+      const { error: insertError } = await supabase
+        .from('league_history')
+        .insert([winner]);
+
+      if (insertError) throw insertError;
+      
+      toast.success('League winner updated successfully!');
+      await get().fetchHistory();
+    } catch (error) {
+      toast.error('Failed to update league winner');
+      console.error('Error updating league winner:', error);
       throw error;
     }
   },
