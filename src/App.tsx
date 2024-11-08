@@ -26,7 +26,7 @@ function App() {
     fetchTeams();
     fetchResults();
     fetchWriteup();
-  }, []);
+  }, [fetchTeams, fetchResults, fetchWriteup]);
 
   const handlePasswordSubmit = () => {
     if (password === 'wolfpack69!') {
@@ -37,7 +37,11 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
+    <div className="min-h-screen p-6">
+      <h1 className="retro-title text-4xl text-center mb-12">
+        Welcome to the Wolfpack Fantasy League
+      </h1>
+
       {writeup && (
         <div className="max-w-4xl mx-auto mb-8 retro-card">
           <h2 className="text-xl mb-4">Weekly Write-up</h2>
