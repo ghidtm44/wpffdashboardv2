@@ -10,15 +10,8 @@
     font-family: 'Press Start 2P', system-ui;
     background-image: 
       linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-      url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M0 50h100M50 0v100'/%3E%3Cpath d='M0 0l100 100M100 0L0 100' stroke-opacity='0.3'/%3E%3C/g%3E%3Crect x='45' y='45' width='10' height='10' fill='%23ffffff' fill-opacity='0.2'/%3E%3C/svg%3E"),
-      repeating-linear-gradient(
-        0deg,
-        #2f4f2f 0px,
-        #2f4f2f 5px,
-        #1f3f1f 5px,
-        #1f3f1f 10px
-      );
-    background-size: 100px 100px, 100px 100px, 100% 100%;
+      url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='2'%3E%3Cpath d='M0 50h100M50 0v100'/%3E%3Cpath d='M0 0l100 100M100 0L0 100' stroke-opacity='0.3'/%3E%3C/g%3E%3Crect x='45' y='45' width='10' height='10' fill='%23ffffff' fill-opacity='0.2'/%3E%3C/svg%3E");
+    background-size: 100px 100px;
     background-position: center;
     image-rendering: pixelated;
   }
@@ -69,7 +62,7 @@
   }
 
   .retro-title {
-    @apply text-6xl font-bold text-center mb-12;
+    @apply text-6xl font-bold text-center mb-12 relative;
     font-family: 'Press Start 2P', monospace;
     color: #fff;
     text-shadow: 
@@ -77,16 +70,18 @@
       0 0 20px rgba(255, 215, 0, 0.3),
       0 0 30px rgba(255, 215, 0, 0.2),
       4px 4px 0 #b22222,
-      8px 8px 0 #8b0000,
-      -2px -2px 0 #000,
-      2px -2px 0 #000,
-      -2px 2px 0 #000,
-      2px 2px 0 #000;
-    animation: 
-      glow 2s ease-in-out infinite alternate,
-      glitch 0.4s ease-in-out infinite alternate;
+      8px 8px 0 #8b0000;
+    animation: glow 2s ease-in-out infinite alternate;
     letter-spacing: 2px;
     line-height: 1.5;
+  }
+
+  .retro-title::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: transparent;
+    border: 2px solid transparent;
   }
 
   @keyframes glow {
@@ -95,27 +90,6 @@
     }
     to {
       filter: brightness(1.1) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
-    }
-  }
-
-  @keyframes glitch {
-    0% {
-      transform: translate(0);
-    }
-    20% {
-      transform: translate(-2px, 2px);
-    }
-    40% {
-      transform: translate(-2px, -2px);
-    }
-    60% {
-      transform: translate(2px, 2px);
-    }
-    80% {
-      transform: translate(2px, -2px);
-    }
-    100% {
-      transform: translate(0);
     }
   }
 
