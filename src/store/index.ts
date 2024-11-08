@@ -25,12 +25,18 @@ export const useStore = create<AppState>((set, get) => ({
   setCommissioner: (value) => set({ isCommissioner: value }),
   
   fetchTeams: async () => {
-    const { data } = await supabase.from('teams').select('*');
+    const { data } = await supabase
+      .from('team_standings')
+      .select('*')
+      .order('wins', { ascending: false });
     if (data) set({ teams: data });
   },
   
   fetchResults: async () => {
-    const { data } = await supabase.from('weekly_results').select('*');
+    const { data } = await supabase
+      .from('weekly_results')
+      .select('*')
+      .order('week', { ascending: true });
     if (data) set({ results: data });
   },
   
@@ -45,40 +51,32 @@ export const useStore = create<AppState>((set, get) => ({
   },
   
   addTeam: async (name, manager) => {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('teams')
-      .insert([{ name, manager }])
-      .select()
-      .single();
+      .insert([{ name, manager }]);
       
-    if (data && !error) {
-      const { teams } = get();
-      set({ teams: [...teams, data] });
-    }
+    if (error) throw error;
+    await get().fetchTeams();
   },
   
   addResult: async (result) => {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('weekly_results')
-      .insert([result])
-      .select()
-      .single();
+      .upsert([result], {
+        onConflict: 'team_id,opponent_id,week'
+      });
       
-    if (data && !error) {
-      const { results } = get();
-      set({ results: [...results, data] });
-    }
+    if (error) throw error;
+    await get().fetchResults();
+    await get().fetchTeams();
   },
   
   addWriteup: async (week, content) => {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('weekly_writeups')
-      .insert([{ week, content }])
-      .select()
-      .single();
+      .insert([{ week, content }]);
       
-    if (data && !error) {
-      set({ writeup: data });
-    }
+    if (error) throw error;
+    await get().fetchWriteup();
   },
 }));
