@@ -91,14 +91,26 @@ export const useStore = create<AppState>((set, get) => ({
   
   addResult: async (result) => {
     try {
-      const { error } = await supabase
+      // First, delete any existing result for this combination
+      const { error: deleteError } = await supabase
         .from('weekly_results')
-        .upsert([result], {
-          onConflict: 'team_id,opponent_id,week'
+        .delete()
+        .match({
+          team_id: result.team_id,
+          opponent_id: result.opponent_id,
+          week: result.week
         });
-        
-      if (error) throw error;
+
+      if (deleteError) throw deleteError;
+
+      // Then insert the new result
+      const { error: insertError } = await supabase
+        .from('weekly_results')
+        .insert([result]);
+
+      if (insertError) throw insertError;
       
+      toast.success('Result added successfully!');
       await get().fetchResults();
       await get().fetchTeams();
     } catch (error) {
@@ -116,6 +128,7 @@ export const useStore = create<AppState>((set, get) => ({
         
       if (error) throw error;
       
+      toast.success('Write-up added successfully!');
       await get().fetchWriteup();
     } catch (error) {
       toast.error('Failed to add writeup');
