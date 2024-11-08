@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        retro: ['"Press Start 2P"', 'system-ui'],
+        retro: ['VT323', 'monospace'],
       },
       animation: {
         'pixel-spin': 'pixel-spin 2s steps(8) infinite',
