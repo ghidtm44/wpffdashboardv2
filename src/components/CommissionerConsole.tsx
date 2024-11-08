@@ -161,24 +161,6 @@ export const CommissionerConsole: React.FC = () => {
                                 />
                                 <span className="text-xs ml-1">TP</span>
                               </label>
-                              <label className="inline-flex items-center">
-                                <input
-                                  type="checkbox"
-                                  className="retro-checkbox"
-                                  checked={result.top_points}
-                                  onChange={async () => {
-                                    try {
-                                      await addResult({
-                                        ...result,
-                                        top_points: !result.top_points,
-                                      });
-                                    } catch (error) {
-                                      toast.error('Failed to update');
-                                    }
-                                  }}
-                                />
-                                <span className="text-xs ml-1">TT</span>
-                              </label>
                             </div>
                           </div>
                         )}
