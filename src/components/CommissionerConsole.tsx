@@ -8,12 +8,13 @@ export const CommissionerConsole: React.FC = () => {
   const [newTeam, setNewTeam] = useState({ name: '', manager: '' });
   const [selectedWeek, setSelectedWeek] = useState(1);
   const [matchup, setMatchup] = useState({
+    week: '1',
     team1: '',
     team2: '',
     score1: '',
     score2: '',
   });
-  const [writeup, setWriteup] = useState('');
+  const [writeup, setWriteup] = useState({ week: '1', content: '' });
 
   const handleAddTeam = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +25,6 @@ export const CommissionerConsole: React.FC = () => {
     
     try {
       await addTeam(newTeam.name, newTeam.manager);
-      toast.success('Team added successfully!');
       setNewTeam({ name: '', manager: '' });
     } catch (error) {
       toast.error('Failed to add team');
@@ -42,7 +42,7 @@ export const CommissionerConsole: React.FC = () => {
       await addResult({
         team_id: matchup.team1,
         opponent_id: matchup.team2,
-        week: selectedWeek,
+        week: parseInt(matchup.week),
         points: Number(matchup.score1),
         opponent_points: Number(matchup.score2),
         top_player: false,
@@ -52,15 +52,15 @@ export const CommissionerConsole: React.FC = () => {
       await addResult({
         team_id: matchup.team2,
         opponent_id: matchup.team1,
-        week: selectedWeek,
+        week: parseInt(matchup.week),
         points: Number(matchup.score2),
         opponent_points: Number(matchup.score1),
         top_player: false,
         top_points: false,
       });
 
-      toast.success('Results added successfully!');
       setMatchup({
+        week: matchup.week,
         team1: '',
         team2: '',
         score1: '',
@@ -73,15 +73,14 @@ export const CommissionerConsole: React.FC = () => {
 
   const handleWriteup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!writeup) {
+    if (!writeup.content) {
       toast.error('Please enter a write-up');
       return;
     }
 
     try {
-      await addWriteup(selectedWeek, writeup);
-      toast.success('Write-up added successfully!');
-      setWriteup('');
+      await addWriteup(parseInt(writeup.week), writeup.content);
+      setWriteup(prev => ({ ...prev, content: '' }));
     } catch (error) {
       toast.error('Failed to add write-up');
     }
@@ -155,7 +154,6 @@ export const CommissionerConsole: React.FC = () => {
                                         ...result,
                                         top_player: !result.top_player,
                                       });
-                                      toast.success('Updated top player status');
                                     } catch (error) {
                                       toast.error('Failed to update');
                                     }
@@ -174,7 +172,6 @@ export const CommissionerConsole: React.FC = () => {
                                         ...result,
                                         top_points: !result.top_points,
                                       });
-                                      toast.success('Updated top points status');
                                     } catch (error) {
                                       toast.error('Failed to update');
                                     }
@@ -199,6 +196,16 @@ export const CommissionerConsole: React.FC = () => {
         <h2 className="text-xl mb-4">Enter Matchup Results</h2>
         <form onSubmit={handleAddResult} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
+            <select
+              className="retro-input"
+              value={matchup.week}
+              onChange={e => setMatchup(prev => ({ ...prev, week: e.target.value }))}
+            >
+              {weeks.map(week => (
+                <option key={week} value={week}>Week {week}</option>
+              ))}
+            </select>
+            <div className="col-span-1"></div>
             <select
               className="retro-input"
               value={matchup.team1}
@@ -243,11 +250,20 @@ export const CommissionerConsole: React.FC = () => {
       <section className="retro-card">
         <h2 className="text-xl mb-4">Weekly Write-up</h2>
         <form onSubmit={handleWriteup} className="space-y-4">
+          <select
+            className="retro-input w-full mb-4"
+            value={writeup.week}
+            onChange={e => setWriteup(prev => ({ ...prev, week: e.target.value }))}
+          >
+            {weeks.map(week => (
+              <option key={week} value={week}>Week {week}</option>
+            ))}
+          </select>
           <textarea
             className="retro-input w-full h-32"
             placeholder="Enter weekly write-up..."
-            value={writeup}
-            onChange={e => setWriteup(e.target.value)}
+            value={writeup.content}
+            onChange={e => setWriteup(prev => ({ ...prev, content: e.target.value }))}
           />
           <button type="submit" className="retro-button">Submit Write-up</button>
         </form>
