@@ -49,7 +49,23 @@ export const useStore = create<AppState>((set, get) => ({
         .order('week', { ascending: true });
         
       if (error) throw error;
-      if (data) set({ results: data });
+      if (data) {
+        // Update top_points flag for each week's highest scorer
+        const resultsByWeek = data.reduce((acc, result) => {
+          acc[result.week] = acc[result.week] || [];
+          acc[result.week].push(result);
+          return acc;
+        }, {} as Record<number, WeeklyResult[]>);
+
+        Object.values(resultsByWeek).forEach(weekResults => {
+          const maxPoints = Math.max(...weekResults.map(r => r.points));
+          weekResults.forEach(result => {
+            result.top_points = result.points === maxPoints;
+          });
+        });
+
+        set({ results: data });
+      }
     } catch (error) {
       toast.error('Failed to fetch results');
       console.error('Error fetching results:', error);
