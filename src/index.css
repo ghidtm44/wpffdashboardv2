@@ -18,25 +18,25 @@
 
 @layer components {
   .retro-card {
-    @apply relative border-4 border-gray-700 bg-gray-800/95 p-6 rounded-lg shadow-lg;
+    @apply relative border-4 border-gray-700 bg-gray-800/95 p-4 sm:p-6 rounded-lg shadow-lg;
     image-rendering: pixelated;
   }
   
   .retro-button {
-    @apply px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded 
-           border-b-4 border-blue-800 active:border-b-0 active:mt-1 transition-all;
+    @apply px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded 
+           border-b-4 border-blue-800 active:border-b-0 active:mt-1 transition-all text-sm sm:text-base;
     font-family: 'Press Start 2P', monospace;
     image-rendering: pixelated;
   }
   
   .retro-input {
-    @apply bg-gray-700 border-2 border-gray-600 rounded px-3 py-2 text-white 
-           focus:outline-none focus:border-blue-500;
+    @apply bg-gray-700 border-2 border-gray-600 rounded px-2 py-1 sm:px-3 sm:py-2 text-white 
+           focus:outline-none focus:border-blue-500 text-sm sm:text-base;
     font-family: 'Press Start 2P', monospace;
   }
 
   .retro-checkbox {
-    @apply w-6 h-6 border-2 border-gray-600 rounded bg-gray-700 
+    @apply w-4 h-4 sm:w-6 sm:h-6 border-2 border-gray-600 rounded bg-gray-700 
            checked:bg-blue-500 checked:border-blue-700;
   }
   
@@ -89,16 +89,32 @@
   }
 
   .retro-title {
-    @apply text-8xl font-bold text-center mb-16 relative;
+    @apply text-4xl sm:text-6xl md:text-8xl font-bold text-center mb-8 sm:mb-16 relative fixed-title;
     font-family: 'VT323', monospace;
     color: #ffd700;
     text-shadow: 
-      4px 4px 0px #ff4500,
-      8px 8px 0px #8b0000,
-      12px 12px 20px rgba(0, 0, 0, 0.5);
-    letter-spacing: 4px;
+      2px 2px 0px #ff4500,
+      4px 4px 0px #8b0000,
+      6px 6px 10px rgba(0, 0, 0, 0.5);
+    letter-spacing: 2px;
     line-height: 1.2;
-    -webkit-text-stroke: 2px #000;
+    -webkit-text-stroke: 1px #000;
+  }
+
+  @screen sm {
+    .retro-title {
+      text-shadow: 
+        4px 4px 0px #ff4500,
+        8px 8px 0px #8b0000,
+        12px 12px 20px rgba(0, 0, 0, 0.5);
+      letter-spacing: 4px;
+      -webkit-text-stroke: 2px #000;
+    }
+  }
+
+  .fixed-title {
+    position: relative;
+    transform: none;
   }
 
   @keyframes pulse {
@@ -111,11 +127,11 @@
   }
 
   .stats-grid {
-    @apply grid grid-cols-2 gap-2 mt-4 text-sm;
+    @apply grid grid-cols-2 gap-1 sm:gap-2 mt-2 sm:mt-4 text-xs sm:text-sm;
   }
 
   .stat-item {
-    @apply flex items-center gap-2 bg-gray-700 p-2 rounded;
+    @apply flex items-center gap-1 sm:gap-2 bg-gray-700 p-1 sm:p-2 rounded;
   }
 
   .stat-label {
@@ -124,5 +140,25 @@
 
   .stat-value {
     @apply text-white font-bold;
+  }
+
+  /* Mobile-specific styles */
+  @media (max-width: 640px) {
+    .commissioner-table {
+      @apply text-xs;
+    }
+    
+    .commissioner-table th,
+    .commissioner-table td {
+      @apply p-1;
+    }
+
+    .team-history-modal {
+      @apply px-4;
+    }
+
+    .matchup-form {
+      @apply grid-cols-1;
+    }
   }
 }
