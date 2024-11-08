@@ -7,15 +7,12 @@
 
 @layer base {
   body {
-    @apply bg-green-800 text-white;
+    @apply text-white;
     font-family: 'Press Start 2P', system-ui;
-    background-image: 
-      linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%),
-      linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.1) 75%),
-      linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.1) 75%);
-    background-size: 20px 20px;
-    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    background-image: url('/field.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     image-rendering: pixelated;
   }
 
@@ -27,14 +24,14 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.6);
     z-index: -1;
   }
 }
 
 @layer components {
   .retro-card {
-    @apply relative border-4 border-gray-700 bg-gray-800/95 p-4 sm:p-6 rounded-lg shadow-lg;
+    @apply relative border-4 border-gray-700 bg-gray-900 p-4 sm:p-6 rounded-lg shadow-lg;
     image-rendering: pixelated;
   }
   
@@ -58,54 +55,50 @@
   
   .heating-up {
     @apply relative;
-    border-color: theme('colors.orange.400');
   }
   
   .heating-up::after {
     content: '';
     @apply absolute inset-0 rounded-lg;
-    box-shadow: 0 0 15px theme('colors.orange.400');
+    border: 4px solid theme('colors.orange.400');
     animation: pulse 2s infinite;
   }
   
   .on-fire {
     @apply relative;
-    border-color: theme('colors.red.500');
   }
   
   .on-fire::after {
     content: '';
     @apply absolute inset-0 rounded-lg;
-    box-shadow: 0 0 25px theme('colors.red.500');
+    border: 4px solid theme('colors.red.500');
     animation: pulse 1s infinite;
   }
   
   .cooling-off {
     @apply relative;
-    border-color: theme('colors.cyan.400');
   }
   
   .cooling-off::after {
     content: '';
     @apply absolute inset-0 rounded-lg;
-    box-shadow: 0 0 15px theme('colors.cyan.400');
+    border: 4px solid theme('colors.cyan.400');
     animation: pulse 2s infinite;
   }
   
   .frozen {
     @apply relative;
-    border-color: theme('colors.blue.600');
   }
   
   .frozen::after {
     content: '';
     @apply absolute inset-0 rounded-lg;
-    box-shadow: 0 0 25px theme('colors.blue.600');
+    border: 4px solid theme('colors.blue.600');
     animation: pulse 1s infinite;
   }
 
   .retro-title {
-    @apply text-4xl sm:text-6xl md:text-8xl font-bold text-center mb-8 sm:mb-16 relative fixed-title;
+    @apply text-5xl sm:text-7xl md:text-8xl font-bold text-center mb-8 sm:mb-16 relative fixed-title;
     font-family: 'Press Start 2P', monospace;
     color: #ffd700;
     text-shadow: 
