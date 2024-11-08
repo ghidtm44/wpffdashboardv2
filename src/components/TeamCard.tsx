@@ -1,6 +1,7 @@
 import React from 'react';
-import { Trophy, Flame, Snowflake } from 'lucide-react';
+import { Trophy, Flame, Snowflake, Crown } from 'lucide-react';
 import { Team, WeeklyResult } from '../types';
+import { useStore } from '../store';
 
 interface TeamCardProps {
   team: Team;
@@ -9,17 +10,26 @@ interface TeamCardProps {
 }
 
 export const TeamCard: React.FC<TeamCardProps> = ({ team, results, onClick }) => {
+  const { getTopScoringTeam } = useStore();
   const teamResults = results.filter(r => r.team_id === team.id);
   const streak = calculateStreak(teamResults);
-  
   const cardClass = getCardClass(streak);
+  
+  // Get the most recent week
+  const latestWeek = Math.max(...results.map(r => r.week));
+  const isTopScorer = getTopScoringTeam(latestWeek) === team.id;
   
   return (
     <div 
       className={`retro-card cursor-pointer ${cardClass}`}
       onClick={onClick}
     >
-      <h3 className="text-xl mb-4">{team.name}</h3>
+      <div className="flex justify-between items-start mb-4">
+        <h3 className="text-xl">{team.name}</h3>
+        {isTopScorer && (
+          <Crown className="text-yellow-400" size={20} />
+        )}
+      </div>
       <p className="text-sm mb-2">Manager: {team.manager}</p>
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
