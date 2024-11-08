@@ -48,42 +48,50 @@ export const TeamHistory: React.FC<TeamHistoryProps> = ({ team, results, onClose
                     : 'bg-red-900 bg-opacity-50'
                 }`}
               >
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mb-2">
                   <span className="text-lg">Week {result.week}</span>
-                  <div className="flex gap-2">
-                    {result.top_player && (
-                      <div className="flex items-center gap-1">
-                        <Star className="text-yellow-400" size={16} />
-                        <span className="text-xs">Top Player</span>
-                      </div>
-                    )}
-                    {isTopScorer && (
-                      <div className="flex items-center gap-1">
-                        <Crown className="text-yellow-400" size={16} />
-                        <span className="text-xs">Top Score</span>
-                      </div>
-                    )}
-                  </div>
                 </div>
-                <div className="mt-2">
-                  <div className="flex justify-between items-center">
-                    <div className="flex-1">
+                <div className="flex justify-between items-center">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
                       <span className="font-bold">{team.name}</span>
-                      <div className="text-lg">{result.points} pts</div>
+                      {result.top_player && (
+                        <div className="flex items-center gap-1">
+                          <Star className="text-yellow-400" size={16} />
+                        </div>
+                      )}
+                      {isTopScorer && (
+                        <div className="flex items-center gap-1">
+                          <Crown className="text-yellow-400" size={16} />
+                        </div>
+                      )}
                     </div>
-                    <div className="flex-none px-4">
-                      <Trophy 
-                        size={20}
-                        className={isWinner 
-                          ? 'text-green-400' 
-                          : 'text-red-400'
-                        } 
-                      />
-                    </div>
-                    <div className="flex-1 text-right">
+                    <div className="text-lg">{result.points} pts</div>
+                  </div>
+                  <div className="flex-none px-4">
+                    <Trophy 
+                      size={20}
+                      className={isWinner 
+                        ? 'text-green-400' 
+                        : 'text-red-400'
+                      } 
+                    />
+                  </div>
+                  <div className="flex-1 text-right">
+                    <div className="flex items-center justify-end gap-2">
                       <span className="font-bold">{opponentName}</span>
-                      <div className="text-lg">{result.opponent_points} pts</div>
+                      {!isWinner && result.top_player && (
+                        <div className="flex items-center gap-1">
+                          <Star className="text-yellow-400" size={16} />
+                        </div>
+                      )}
+                      {!isWinner && isTopScorer && (
+                        <div className="flex items-center gap-1">
+                          <Crown className="text-yellow-400" size={16} />
+                        </div>
+                      )}
                     </div>
+                    <div className="text-lg">{result.opponent_points} pts</div>
                   </div>
                 </div>
               </div>
