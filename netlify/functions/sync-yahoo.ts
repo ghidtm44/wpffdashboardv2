@@ -1,7 +1,7 @@
 import { Handler, schedule } from '@netlify/functions';
 import { syncYahooData } from '../../src/lib/yahoo';
 
-const handler: Handler = async (event, context) => {
+const syncHandler: Handler = async (event, context) => {
   try {
     const result = await syncYahooData();
     return {
@@ -16,5 +16,4 @@ const handler: Handler = async (event, context) => {
   }
 };
 
-// Run every 6 hours
-export const handler = schedule('0 */6 * * *', handler);
+export const handler = schedule('0 */6 * * *', syncHandler);
