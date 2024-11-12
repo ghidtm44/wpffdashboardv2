@@ -9,14 +9,13 @@
   body {
     @apply text-white;
     font-family: 'Press Start 2P', system-ui;
-    background-image: url('../src/field.png');
+    background-image: url('/src/field.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     image-rendering: pixelated;
   }
 
-  /* Add a dark overlay to make text more readable */
   body::before {
     content: '';
     position: fixed;
@@ -24,27 +23,50 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.75);
     z-index: -1;
   }
 }
 
 @layer components {
   .retro-title {
-    @apply text-2xl sm:text-4xl font-bold text-center mb-8 text-white;
+    @apply text-2xl sm:text-4xl font-bold text-center mb-8;
     font-family: 'Press Start 2P', system-ui;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    text-shadow: 
+      0 0 10px rgba(255, 255, 255, 0.5),
+      0 0 20px rgba(255, 255, 255, 0.3);
   }
 
   .retro-card {
-    @apply bg-gray-900 bg-opacity-90 p-4 sm:p-6 rounded-lg border-2 border-gray-700 shadow-lg;
-    backdrop-filter: blur(10px);
+    @apply bg-gray-900 p-4 sm:p-6 rounded-lg border-2 border-gray-700;
+    background: linear-gradient(
+      to bottom right,
+      rgba(31, 41, 55, 0.95),
+      rgba(17, 24, 39, 0.95)
+    );
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06),
+      0 0 0 2px rgba(55, 65, 81, 0.1);
+    backdrop-filter: blur(12px);
+    transform: translateZ(0);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .retro-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05),
+      0 0 0 2px rgba(59, 130, 246, 0.1);
   }
 
   .retro-button {
     @apply px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded 
            border-2 border-blue-800 transition-colors duration-200
-           font-pixel text-sm;
+           text-sm font-bold;
+    font-family: 'Press Start 2P', system-ui;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
   }
 
   .retro-input {
@@ -65,27 +87,69 @@
   }
 
   .stat-value {
-    @apply text-white;
+    @apply text-white font-bold;
   }
 }
 
 /* Card state classes */
 .on-fire {
+  background: linear-gradient(
+    to bottom right,
+    rgba(31, 41, 55, 0.95),
+    rgba(17, 24, 39, 0.95)
+  );
   @apply border-orange-500;
-  box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+  box-shadow: 
+    0 0 20px rgba(249, 115, 22, 0.4),
+    0 0 40px rgba(249, 115, 22, 0.2);
+  animation: pulseFire 2s infinite;
 }
 
 .heating-up {
+  background: linear-gradient(
+    to bottom right,
+    rgba(31, 41, 55, 0.95),
+    rgba(17, 24, 39, 0.95)
+  );
   @apply border-orange-300;
-  box-shadow: 0 0 15px rgba(253, 186, 116, 0.3);
+  box-shadow: 
+    0 0 15px rgba(253, 186, 116, 0.3),
+    0 0 30px rgba(253, 186, 116, 0.1);
 }
 
 .frozen {
+  background: linear-gradient(
+    to bottom right,
+    rgba(31, 41, 55, 0.95),
+    rgba(17, 24, 39, 0.95)
+  );
   @apply border-blue-500;
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+  box-shadow: 
+    0 0 20px rgba(59, 130, 246, 0.4),
+    0 0 40px rgba(59, 130, 246, 0.2);
+  animation: pulseIce 2s infinite;
 }
 
 .cooling-off {
+  background: linear-gradient(
+    to bottom right,
+    rgba(31, 41, 55, 0.95),
+    rgba(17, 24, 39, 0.95)
+  );
   @apply border-blue-300;
-  box-shadow: 0 0 15px rgba(147, 197, 253, 0.3);
+  box-shadow: 
+    0 0 15px rgba(147, 197, 253, 0.3),
+    0 0 30px rgba(147, 197, 253, 0.1);
+}
+
+@keyframes pulseFire {
+  0% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), 0 0 40px rgba(249, 115, 22, 0.2); }
+  50% { box-shadow: 0 0 25px rgba(249, 115, 22, 0.5), 0 0 50px rgba(249, 115, 22, 0.3); }
+  100% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), 0 0 40px rgba(249, 115, 22, 0.2); }
+}
+
+@keyframes pulseIce {
+  0% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.2); }
+  50% { box-shadow: 0 0 25px rgba(59, 130, 246, 0.5), 0 0 50px rgba(59, 130, 246, 0.3); }
+  100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.2); }
 }
