@@ -16,6 +16,7 @@
     image-rendering: pixelated;
   }
 
+  /* Dark overlay for better readability */
   body::before {
     content: '';
     position: fixed;
@@ -23,7 +24,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(0, 0, 0, 0.8);
     z-index: -1;
   }
 }
@@ -38,35 +39,31 @@
   }
 
   .retro-card {
-    @apply bg-gray-900 p-4 sm:p-6 rounded-lg border-2 border-gray-700;
-    background: linear-gradient(
-      to bottom right,
-      rgba(31, 41, 55, 0.95),
-      rgba(17, 24, 39, 0.95)
-    );
+    @apply bg-gray-900 bg-opacity-90 p-4 sm:p-6 rounded-lg border-2 border-gray-700 relative;
     box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06),
-      0 0 0 2px rgba(55, 65, 81, 0.1);
+      0 4px 6px -1px rgba(0, 0, 0, 0.2),
+      0 2px 4px -1px rgba(0, 0, 0, 0.1),
+      0 0 0 2px rgba(55, 65, 81, 0.1),
+      inset 0 2px 4px rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(12px);
-    transform: translateZ(0);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.3s ease;
   }
 
   .retro-card:hover {
     transform: translateY(-2px);
     box-shadow: 
-      0 10px 15px -3px rgba(0, 0, 0, 0.1),
-      0 4px 6px -2px rgba(0, 0, 0, 0.05),
-      0 0 0 2px rgba(59, 130, 246, 0.1);
+      0 10px 15px -3px rgba(0, 0, 0, 0.3),
+      0 4px 6px -2px rgba(0, 0, 0, 0.15),
+      0 0 0 2px rgba(59, 130, 246, 0.2),
+      inset 0 2px 4px rgba(255, 255, 255, 0.15);
   }
 
   .retro-button {
     @apply px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded 
            border-2 border-blue-800 transition-colors duration-200
-           text-sm font-bold;
+           text-sm font-bold shadow-lg;
     font-family: 'Press Start 2P', system-ui;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
   }
 
   .retro-input {
@@ -91,65 +88,69 @@
   }
 }
 
-/* Card state classes */
+/* Card state classes with enhanced effects */
 .on-fire {
-  background: linear-gradient(
-    to bottom right,
-    rgba(31, 41, 55, 0.95),
-    rgba(17, 24, 39, 0.95)
-  );
   @apply border-orange-500;
+  background: linear-gradient(
+    135deg,
+    rgba(31, 41, 55, 0.95) 0%,
+    rgba(17, 24, 39, 0.95) 100%
+  );
   box-shadow: 
     0 0 20px rgba(249, 115, 22, 0.4),
-    0 0 40px rgba(249, 115, 22, 0.2);
+    0 0 40px rgba(249, 115, 22, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
   animation: pulseFire 2s infinite;
 }
 
 .heating-up {
-  background: linear-gradient(
-    to bottom right,
-    rgba(31, 41, 55, 0.95),
-    rgba(17, 24, 39, 0.95)
-  );
   @apply border-orange-300;
+  background: linear-gradient(
+    135deg,
+    rgba(31, 41, 55, 0.95) 0%,
+    rgba(17, 24, 39, 0.95) 100%
+  );
   box-shadow: 
     0 0 15px rgba(253, 186, 116, 0.3),
-    0 0 30px rgba(253, 186, 116, 0.1);
+    0 0 30px rgba(253, 186, 116, 0.1),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
 .frozen {
-  background: linear-gradient(
-    to bottom right,
-    rgba(31, 41, 55, 0.95),
-    rgba(17, 24, 39, 0.95)
-  );
   @apply border-blue-500;
+  background: linear-gradient(
+    135deg,
+    rgba(31, 41, 55, 0.95) 0%,
+    rgba(17, 24, 39, 0.95) 100%
+  );
   box-shadow: 
     0 0 20px rgba(59, 130, 246, 0.4),
-    0 0 40px rgba(59, 130, 246, 0.2);
+    0 0 40px rgba(59, 130, 246, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
   animation: pulseIce 2s infinite;
 }
 
 .cooling-off {
-  background: linear-gradient(
-    to bottom right,
-    rgba(31, 41, 55, 0.95),
-    rgba(17, 24, 39, 0.95)
-  );
   @apply border-blue-300;
+  background: linear-gradient(
+    135deg,
+    rgba(31, 41, 55, 0.95) 0%,
+    rgba(17, 24, 39, 0.95) 100%
+  );
   box-shadow: 
     0 0 15px rgba(147, 197, 253, 0.3),
-    0 0 30px rgba(147, 197, 253, 0.1);
+    0 0 30px rgba(147, 197, 253, 0.1),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
 @keyframes pulseFire {
-  0% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), 0 0 40px rgba(249, 115, 22, 0.2); }
-  50% { box-shadow: 0 0 25px rgba(249, 115, 22, 0.5), 0 0 50px rgba(249, 115, 22, 0.3); }
-  100% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), 0 0 40px rgba(249, 115, 22, 0.2); }
+  0% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), 0 0 40px rgba(249, 115, 22, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.1); }
+  50% { box-shadow: 0 0 25px rgba(249, 115, 22, 0.5), 0 0 50px rgba(249, 115, 22, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.15); }
+  100% { box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), 0 0 40px rgba(249, 115, 22, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.1); }
 }
 
 @keyframes pulseIce {
-  0% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.2); }
-  50% { box-shadow: 0 0 25px rgba(59, 130, 246, 0.5), 0 0 50px rgba(59, 130, 246, 0.3); }
-  100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.2); }
+  0% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.1); }
+  50% { box-shadow: 0 0 25px rgba(59, 130, 246, 0.5), 0 0 50px rgba(59, 130, 246, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.15); }
+  100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.1); }
 }
