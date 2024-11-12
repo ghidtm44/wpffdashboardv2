@@ -1,5 +1,5 @@
 import { Handler, schedule } from '@netlify/functions';
-import { syncYahooData } from '../../src/lib/yahoo';
+import { syncYahooData } from './yahoo-service';
 
 const syncHandler: Handler = async (event, context) => {
   try {
