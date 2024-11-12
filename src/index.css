@@ -29,4 +29,63 @@
   }
 }
 
-/* Rest of your CSS remains the same */
+@layer components {
+  .retro-title {
+    @apply text-2xl sm:text-4xl font-bold text-center mb-8 text-white;
+    font-family: 'Press Start 2P', system-ui;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+
+  .retro-card {
+    @apply bg-gray-900 bg-opacity-90 p-4 sm:p-6 rounded-lg border-2 border-gray-700 shadow-lg;
+    backdrop-filter: blur(10px);
+  }
+
+  .retro-button {
+    @apply px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded 
+           border-2 border-blue-800 transition-colors duration-200
+           font-pixel text-sm;
+  }
+
+  .retro-input {
+    @apply bg-gray-800 text-white border-2 border-gray-700 rounded px-3 py-2
+           focus:outline-none focus:border-blue-500 transition-colors duration-200;
+  }
+
+  .stats-grid {
+    @apply grid grid-cols-2 gap-2 mt-4;
+  }
+
+  .stat-item {
+    @apply flex items-center gap-2 text-xs sm:text-sm;
+  }
+
+  .stat-label {
+    @apply text-gray-400;
+  }
+
+  .stat-value {
+    @apply text-white;
+  }
+}
+
+/* Card state classes */
+.on-fire {
+  @apply border-orange-500;
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+}
+
+.heating-up {
+  @apply border-orange-300;
+  box-shadow: 0 0 15px rgba(253, 186, 116, 0.3);
+}
+
+.frozen {
+  @apply border-blue-500;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+}
+
+.cooling-off {
+  @apply border-blue-300;
+  box-shadow: 0 0 15px rgba(147, 197, 253, 0.3);
+}
