@@ -53,7 +53,28 @@ export const useStore = create<AppState>((set, get) => ({
         .order('week', { ascending: true });
         
       if (error) throw error;
-      if (data) set({ results: data });
+      if (data) {
+        // Process top scores for each week
+        const weeklyResults = new Map<number, WeeklyResult[]>();
+        data.forEach(result => {
+          if (!weeklyResults.has(result.week)) {
+            weeklyResults.set(result.week, []);
+          }
+          weeklyResults.get(result.week)!.push(result);
+        });
+
+        // Update top_points flag for each week's highest scorer
+        const processedResults = data.map(result => {
+          const weekResults = weeklyResults.get(result.week) || [];
+          const maxPoints = Math.max(...weekResults.map(r => r.points));
+          return {
+            ...result,
+            top_points: result.points === maxPoints
+          };
+        });
+
+        set({ results: processedResults });
+      }
     } catch (error) {
       toast.error('Failed to fetch results');
       console.error('Error fetching results:', error);
@@ -186,8 +207,8 @@ export const useStore = create<AppState>((set, get) => ({
     const weekResults = results.filter(r => r.week === week);
     if (!weekResults.length) return null;
 
-    const topScore = Math.max(...weekResults.map(r => r.points));
-    const topTeam = weekResults.find(r => r.points === topScore);
+    const maxPoints = Math.max(...weekResults.map(r => r.points));
+    const topTeam = weekResults.find(r => r.points === maxPoints);
     
     return topTeam ? topTeam.team_id : null;
   },
