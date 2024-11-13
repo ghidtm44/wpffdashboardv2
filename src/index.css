@@ -9,11 +9,7 @@
   body {
     @apply bg-green-800 text-white;
     font-family: 'Press Start 2P', system-ui;
-    background-image: 
-      linear-gradient(45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%),
-      linear-gradient(-45deg, rgba(0, 0, 0, 0.1) 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.1) 75%),
-      linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.1) 75%);
+    background-image: url('/src/field.png');
     background-size: 20px 20px;
     background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
     image-rendering: pixelated;
